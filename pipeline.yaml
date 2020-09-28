@@ -1,0 +1,34 @@
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: test-build-push
+spec:
+  resources:
+    - name: repo
+      type: git
+  tasks:
+    # Run application tests
+    - name: test
+      taskRef:
+        name: test
+      resources:
+        inputs:
+          - name: repo      # name of the Task input (see Task definition)
+            resource: repo  # name of the Pipeline resource
+
+    # Build docker image and push to registry
+    - name: build-and-push
+      taskRef:
+        name: build-and-push
+      runAfter:
+        - test
+      resources:
+        inputs:
+          - name: repo      # name of the Task input (see Task definition)
+            resource: repo 
+    # Run application tests
+    - name: deploy-kubectl-task
+      taskRef:
+        name: deploy-kubectl
+      runAfter:
+        - build-and-push      # name of the Pipeline resource

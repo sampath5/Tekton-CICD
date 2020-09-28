@@ -1,0 +1,20 @@
+apiVersion: tekton.dev/v1alpha1
+kind: Task
+metadata:
+  name: deploy-kubectl
+spec:
+  inputs:
+    resources:
+    params:
+    - name: K8S_DIRECTORY_PATH
+      description: Path to the directory for kubectl apply -f
+      default: ./test-deploy.yaml
+  steps:
+  - name: apply-config
+    image: alluriram9/tekton-test
+    workingDir: workspace/repo/src
+    command: ['kubectl']
+    args:
+    - apply
+    - -f
+    - $(inputs.params.K8S_DIRECTORY_PATH)
