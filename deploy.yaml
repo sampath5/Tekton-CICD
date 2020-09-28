@@ -11,7 +11,7 @@ spec:
       default: ./test-deploy.yaml
   steps:
   - name: apply-config
-    image: alluriram9/tekton-test
+    image: <image-name>/tekton-test
     workingDir: workspace/repo/src
     command: ['kubectl']
     args:
